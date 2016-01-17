@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Tour
+{% endblock %}
+{% block menu %}
+    <li class="active">
+        <a href="{% url 'leads:create' %}">Add Tour</a>
+    </li>
+{% endblock %}
+{% block content %}
+            <div class="row ">
+                <div class="col-md-12 ">
+                    <form class="form-horizontal " role="form" action="" method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            {% with errors=field.errors %}
+                                <div class="form-group ">
+                                    <div class="col-sm-2 ">
+                                        {{ field.label_tag }}
+                                    </div>
+                                    <div class="col-sm-10 ">
+                                        {{ field }}
+                                         {% if errors %}
+                                            {% for error in errors %}
+                                                <span class="help-block">{{ error }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endwith %}
+                        {% endfor %}
+                        {% with errors=form.non_field_errors %}
+                            {% if errors %}
+                                <div class="has-error">
+                                    {% for error in errors %}
+                                        <p class="help-block">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                        <div class="form-group ">
+                            <div class="col-sm-offset-2 col-sm-10 ">
+                                <button type="submit" class="btn btn-default ">
+                                    <i class="fa fa-save fa-fw "></i>Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+{% endblock %}

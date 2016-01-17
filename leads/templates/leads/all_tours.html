@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+ <div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-primary" href="{% url 'leads:create' %}">
+            <i class="fa fa-plus fa-fw"></i>
+            Add Lead
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr class="active">
+                    <th>Choose</th>
+                    <th>Operation</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Card Number</th>
+                    <th>Expire Date</th>
+                    <th>Languages</th>
+                    <th>Professional</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tour in tours %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" data-url="{% url 'leads:delete' pk=tour.id %}">
+                        </td>
+                        <td>
+                            <a href="{% url 'leads:edit_tour' pk=tour.id %}">Edit</a>|
+                            <a href="{% url 'leads:delete' pk=tour.id %}">Delete</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'leads:tour' pk=tour.id %}">{{ tour.name }}</a>
+                        </td>
+                        <td>{{ tour.gender }}</td>
+                        <td>{{ tour.card_number }}</td>
+                        <td>{{ tour.expiry_date }}</td>
+                        <td>{{ tour.languages }}</td>
+                        <td>{{ tour.professional }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+ <div class="row ">
+    <div class="col-md-3 ">
+        <input type="checkbox" class="select_all"/>Select All
+        <a class="btn btn-primary pull-right delete">
+            <i class="fa fa-remove fa-fw "></i>
+            Delete
+        </a>
+    </div>
+         {% if is_paginated %}
+            <div class="col-md-9 ">
+                <ul class="pagination pull-right ">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="{% url 'leads:tours' %}?page={{ page_obj.previous_page_number }}">Prev</a>
+                        </li>
+                    {% endif %}
+                    {% for page in page_obj.paginator.page_range %}
+                        <li {% if page == request.GET.page %} class="active" {% endif %}>
+                            <a href="{% url 'leads:tours' %}?page={{ page }}">{{ page }}</a>
+                    {% endfor %}
+                        </li>
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="{% url 'leads:tours' %}?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+         {% endif %}
+</div>
+{% endblock %}

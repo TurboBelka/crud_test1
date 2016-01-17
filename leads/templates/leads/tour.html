@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}
+    Details
+{% endblock %}
+{% block menu %}
+    <li class="active">
+        <a href="{% url 'leads:tour' pk=tour.id %}">Details</a>
+    </li>
+{% endblock %}
+{% block content %}
+    <div class="row ">
+        <div class="col-md-12 ">
+                <div class="col-sm-12">
+                    <div class="col-sm-2 ">
+                        <label class="control-label ">Name</label>
+                    </div>
+                    <div class="col-sm-10 ">
+                        {{ tour.name }}
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-2 ">
+                        <label class="control-label ">Gender</label>
+                    </div>
+                    <div class="col-sm-10 ">
+                        {{ tour.gender }}
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-2 ">
+                        <label class="control-label ">Languages</label>
+                    </div>
+                    <div class="col-sm-10 ">
+                        {{ tour.languages }}
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-2 ">
+                        <label class="control-label ">Card Number</label>
+                    </div>
+                    <div class="col-sm-10 ">
+                        {{ tour.card_number }}
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-2 ">
+                        <label class="control-label ">Expiry Date</label>
+                    </div>
+                    <div class="col-sm-10 ">
+                        {{ tour.expiry_date|date:"d-m-y" }}
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-2 ">
+                        <label class="control-label ">Professional</label>
+                    </div>
+                    <div class="col-sm-10 ">
+                        {{ tour.professional }}
+                    </div>
+                </div>
+        </div>
+    </div>
+{% endblock %}
