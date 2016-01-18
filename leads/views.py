@@ -8,9 +8,10 @@ class LeadsList(generic.TemplateView):
     template_name = 'leads/list.html'
 
 
-class TourLeadCreateView(generic.FormView):
+class TourLeadCreateView(generic.CreateView):
     template_name = 'leads/create.html'
     form_class = forms.TourLeadCreateForm
+    success_url = reverse_lazy('leads:tours')
 
 
 class TourLeadListView(generic.ListView):
@@ -40,13 +41,14 @@ class TourLeadEditView(generic.UpdateView):
     context_object_name = 'tour'
     form_class = forms.TourLeadCreateForm
     model = models.TourLeads
+    success_url = reverse_lazy('leads:tours')
 
-    def get_context_data(self, **kwargs):
-        context = super(TourLeadEditView, self).get_context_data(**kwargs)
-        cur_tour = models.TourLeads.objects.get(pk=self.kwargs.get('pk'))
-        context['form'] = forms.TourLeadCreateForm(instance=cur_tour)
-        context['language_form'] = forms.LanguagesFormSet
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(TourLeadEditView, self).get_context_data(**kwargs)
+    #     cur_tour = models.TourLeads.objects.get(pk=self.kwargs.get('pk'))
+    #     context['form'] = forms.TourLeadCreateForm(instance=cur_tour)
+    #     context['language_form'] = forms.LanguagesFormSet
+    #     return context
 
 
 class TourLeadDeleteView(generic.DeleteView):

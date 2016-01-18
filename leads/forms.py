@@ -30,7 +30,7 @@ class TourLeadCreateForm(FormControlMixin, forms.ModelForm):
     expiry_date = forms.DateField(widget=forms.DateInput(attrs={'placeholder': '2015-12-01'}))
     professional = forms.ChoiceField(label='Professional', widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),
                                      choices=models.TourLeads.PROF_CHOICES)
-    languages = forms.ModelMultipleChoiceField(queryset=models.Languages.objects.all())
+    languages = forms.ModelMultipleChoiceField(queryset=models.Languages.objects.all(), required=False)
 
     class Meta:
         model = models.TourLeads
@@ -39,13 +39,13 @@ class TourLeadCreateForm(FormControlMixin, forms.ModelForm):
     def clean(self):
         card_number = self.cleaned_data.get('card_number')
         expiry_date = self.cleaned_data.get('expiry_date')
-        if not card_number:
+        if not card_number and expiry_date:
             message = 'Card number must not to be empty for expiry date'
             del self.cleaned_data['expiry_date']
             self._errors['card_number'] = self.error_class([message])
         elif card_number and not expiry_date:
             message = 'Empty value of expiry date'
-            self._errors['card_number'] = self.error_class([message])
+            self._errors['expiry_date'] = self.error_class([message])
         else:
             return self.cleaned_data
 

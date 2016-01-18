@@ -12,7 +12,9 @@ $(function(){
                 $.ajax({
                     url: $(tours_for_delete[i]).data('url'),
                     method: 'get',
-                    success: function(data){}
+                    success: function(data){
+                        console.log(data);
+                    }
                 });
             }
         }
