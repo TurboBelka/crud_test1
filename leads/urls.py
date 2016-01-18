@@ -10,4 +10,5 @@ urlpatterns = patterns(
     url(r'^edit/(?P<pk>[0-9]+)/$', views.TourLeadEditView.as_view(), name='edit_tour'),
     url(r'^delete/(?P<pk>[0-9]+)/$', views.TourLeadDeleteView.as_view(), name='delete'),
     url(r'^tour/(?P<pk>[0-9]+)/$', views.TourLeadDetailView.as_view(), name='tour'),
+    url(r'^delete_all/$', views.TourLeadAllDeleteView.as_view(), name='delete_all'),
 )

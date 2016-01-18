@@ -1,31 +1,62 @@
 {% extends 'base.html' %}
 {% block title %}
-    Add Tour
+    {{ title }} Tour
 {% endblock %}
 {% block menu %}
-    <li class="active">
-        <a href="{% url 'leads:create' %}">Add Tour</a>
-    </li>
+    <li class="active">{{ title }} Tour</li>
 {% endblock %}
 {% block content %}
-            <div class="row ">
+            <div class="row">
                 <div class="col-md-12 ">
                     <form class="form-horizontal " role="form" action="" method="post">
                         {% csrf_token %}
                         {% for field in form %}
                             {% with errors=field.errors %}
                                 <div class="form-group ">
-                                    <div class="col-sm-2 ">
-                                        {{ field.label_tag }}
-                                    </div>
-                                    <div class="col-sm-10 {% if errors %} has-error {% endif %}">
-                                        {{ field }}
-                                         {% if errors %}
-                                            {% for error in errors %}
-                                                <span class="help-block">{{ error }}</span>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
+                                    {% if field.label == 'Card number' %}
+                                        {{ languages_formset.management_form }}
+                                        {% for language in languages_formset %}
+                                            {% for field in language %}
+                                                {% with errors=field.errors %}
+                                                    <div class="
+                                                        {% if field.label != 'Language' %}
+                                                            hidden {% endif %}">
+                                                        <div class="col-sm-2">
+                                                            {{ field.label_tag }}
+                                                        </div>
+                                                        <div class="col-sm-10">
+                                                            <div class="input-group {% if errors %} has-error {% endif %}">
+                                                                {{ field }}
+                                                                {% if errors %}
+                                                                {% for error in errors %}
+                                                                        <span class="help-block">{{ error }}</span>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                            <!--</div>-->
+                                                            <!--<div class="col-sm-2">-->
+                                                                <span class="input-group-addon" style="padding: 0px;">
+                                                                    <button type="submit" class="btn btn-default ">
+                                                                        <i class="fa fa-save fa-fw "></i>Add</button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endwith %}
+                                           {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                        <div class="col-sm-2 ">
+                                            {{ field.label_tag }}
+                                        </div>
+                                        <div class="col-sm-10 {% if errors %} has-error {% endif %}">
+                                            {{ field }}
+                                             {% if errors %}
+                                                {% for error in errors %}
+                                                    <span class="help-block">{{ error }}</span>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+
                                 </div>
                             {% endwith %}
                         {% endfor %}
@@ -41,7 +72,7 @@
                         <div class="form-group ">
                             <div class="col-sm-offset-2 col-sm-10 ">
                                 <button type="submit" class="btn btn-default ">
-                                    <i class="fa fa-save fa-fw "></i>Add</button>
+                                    <i class="fa fa-save fa-fw "></i>{{ title }}</button>
                             </div>
                         </div>
                     </form>

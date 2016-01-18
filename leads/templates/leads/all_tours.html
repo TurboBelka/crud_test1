@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}
-    {{ title }}
+    All Tours
+{% endblock %}
+{% block menu %}
 {% endblock %}
 {% block content %}
+{% csrf_token %}
  <div class="row">
     <div class="col-md-12">
         <a class="btn btn-primary" href="{% url 'leads:create' %}">
@@ -30,19 +33,26 @@
                 {% for tour in tours %}
                     <tr>
                         <td>
-                            <input type="checkbox" data-url="{% url 'leads:delete' pk=tour.id %}">
+                            <input type="checkbox" data-id="{{ tour.id }}" data-tour="{{ tour.name }}">
                         </td>
                         <td>
                             <a href="{% url 'leads:edit_tour' pk=tour.id %}">Edit</a>|
-                            <a href="{% url 'leads:delete' pk=tour.id %}">Delete</a>
+                            <a class="delete-tour" href="{% url 'leads:delete' pk=tour.id %}">Delete</a>
                         </td>
                         <td>
-                            <a href="{% url 'leads:tour' pk=tour.id %}">{{ tour.name }}</a>
+                            <a href="{% url 'leads:tour' pk=tour.id %}" >{{ tour.name }}</a>
                         </td>
                         <td>{{ tour.gender }}</td>
                         <td>{{ tour.card_number }}</td>
                         <td>{{ tour.expiry_date }}</td>
-                        <td>{{ tour.languages }}</td>
+                        <td>
+                            {% if tour.languages.exists %}
+                                {% for language in tour.languages.all %}
+                                    {{ language.name }}
+                                    {% if forloop.last == False %} , {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
                         <td>{{ tour.professional }}</td>
                     </tr>
                 {% endfor %}
@@ -53,10 +63,11 @@
  <div class="row ">
     <div class="col-md-3 ">
         <input type="checkbox" class="select_all"/>Select All
-        <a class="btn btn-primary pull-right delete">
-            <i class="fa fa-remove fa-fw "></i>
-            Delete
-        </a>
+
+            <a class="btn btn-primary pull-right delete" data-url="{% url 'leads:delete_all' %}">
+                <i class="fa fa-remove fa-fw "></i>
+                Delete
+            </a>
     </div>
          {% if is_paginated %}
             <div class="col-md-9 ">
@@ -67,7 +78,7 @@
                         </li>
                     {% endif %}
                     {% for page in page_obj.paginator.page_range %}
-                        <li {% if page == request.GET.page %} class="active" {% endif %}>
+                        <li {% if page == page_obj.number %} class="active" {% endif %}>
                             <a href="{% url 'leads:tours' %}?page={{ page }}">{{ page }}</a>
                     {% endfor %}
                         </li>
@@ -79,5 +90,31 @@
                 </ul>
             </div>
          {% endif %}
+</div>
+
+     <!-- Modal -->
+  <div class="modal fade" id="deleteModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4>Confirmation</h4>
+        </div>
+          <form action="" method="post" class="confirm">
+              {% csrf_token %}
+            <div class="modal-body">
+              <p>Are you sure you want to delete ?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+              <button type="submit" class="btn btn-default btn-default pull-right"> Confirm </button>
+                <!--<input type="submit" value="Confirm" />-->
+            </div>
+       </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

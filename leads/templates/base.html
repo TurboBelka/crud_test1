@@ -53,8 +53,8 @@
                         <li>
                             <a href="{% url 'leads:tours' %}">Home</a>
                         </li>
-                        <li class="active">
-                            <a href="{% url 'leads:tours' %}">Tour Leads</a>
+                        <li {% if title == 'Tour Leads' %} class="active" {% else %} style="color: #18bc9c;" {% endif %}>
+                                Tour Leads
                         </li>
                         {% block menu %}{% endblock %}
                     </ul>

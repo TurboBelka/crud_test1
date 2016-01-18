@@ -11,8 +11,8 @@ class HorizontalRadioRenderer(forms.RadioSelect.renderer):
 
 
 class FormControlMixin(object):
-    def __init__(self, **kwargs):
-        super(FormControlMixin, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(FormControlMixin, self).__init__(*args, **kwargs)
         for key, field in self.fields.iteritems():
             if key != 'gender' and key != 'professional':
                 field.widget.attrs.update({'class': 'form-control'})
@@ -30,11 +30,10 @@ class TourLeadCreateForm(FormControlMixin, forms.ModelForm):
     expiry_date = forms.DateField(widget=forms.DateInput(attrs={'placeholder': '2015-12-01'}))
     professional = forms.ChoiceField(label='Professional', widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),
                                      choices=models.TourLeads.PROF_CHOICES)
-    languages = forms.ModelMultipleChoiceField(queryset=models.Languages.objects.all(), required=False)
 
     class Meta:
         model = models.TourLeads
-        fields = ('name', 'gender', 'languages', 'card_number', 'expiry_date', 'professional')
+        fields = ('name', 'gender', 'card_number', 'expiry_date', 'professional')
 
     def clean(self):
         card_number = self.cleaned_data.get('card_number')
@@ -50,13 +49,18 @@ class TourLeadCreateForm(FormControlMixin, forms.ModelForm):
             return self.cleaned_data
 
 
-class Language(FormControlMixin, forms.ModelForm):
-    name = forms.CharField(label='Language', widget=forms.TextInput(attrs={'placeholder': 'Chinese'}),)
+class TourLeadsLanguagesForm(FormControlMixin, forms.ModelForm):
+    tourlead = forms.HiddenInput()
 
     class Meta:
-        model = models.Languages
-        fields = ('name',)
+        model = models.TourLeadsLanguages
+        exclude = ['id', ]
 
-
-# LanguagesFormSet = inlineformset_factory(models.TourLeads, models.TourLeadsLanguage, form=Language, extra=1)
-LanguagesFormSet = forms.formset_factory(Language)
+LanguagesFormSet = inlineformset_factory(
+    models.TourLeads,
+    models.TourLeadsLanguages,
+    extra=1,
+    can_delete=False,
+    form=TourLeadsLanguagesForm,
+    formset=BaseInlineFormSet
+)
