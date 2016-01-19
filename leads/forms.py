@@ -1,7 +1,10 @@
+from datetime import timedelta
 from django import forms
 from . import models
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.forms import inlineformset_factory, BaseInlineFormSet
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 
 
@@ -36,18 +39,32 @@ class TourLeadCreateForm(FormControlMixin, forms.ModelForm):
         fields = ('name', 'gender', 'card_number', 'expiry_date', 'professional')
 
     def clean(self):
+        super(TourLeadCreateForm, self).clean()
+
+
+
+    def clean_expiry_date(self):
         card_number = self.cleaned_data.get('card_number')
         expiry_date = self.cleaned_data.get('expiry_date')
         if not card_number and expiry_date:
             message = 'Card number must not to be empty for expiry date'
-            del self.cleaned_data['expiry_date']
-            self._errors['card_number'] = self.error_class([message])
-        elif card_number and not expiry_date:
+            # self._errors['card_number'] = self.error_class([message])
+            raise ValidationError(message)
+        if card_number and not expiry_date:
             message = 'Empty value of expiry date'
             self._errors['expiry_date'] = self.error_class([message])
+            raise ValidationError(message)
         else:
-            return self.cleaned_data
+            time_futur = (timezone.now() + timedelta(days=180)).date()
+            if self.cleaned_data['expiry_date'] < time_futur:
+                message = 'Has to be at least 6 months into the future'
+                self._errors['expiry_date'] = self.error_class([message])
+                raise ValidationError(message)
 
+    def clean_card_number(self):
+        card_number = self.cleaned_data.get('card_number')
+        if len(card_number) < 8:
+            raise ValidationError('Card number must contain 8 or 16 character')
 
 class TourLeadsLanguagesForm(FormControlMixin, forms.ModelForm):
     tourlead = forms.HiddenInput()
@@ -77,4 +94,5 @@ LanguagesFormSet = inlineformset_factory(
     can_delete=True,
     form=TourLeadsLanguagesForm,
     formset=LanguagesInlineFormset,
+    max_num=4,
 )

@@ -1,14 +1,14 @@
-var get_id_for_delete = function(){}
-
-
 var replace = function(){
     var index = 0;
     $.each($('.my_form .language'), function(i, value){
         var $this = $(this).find('input, select');
-        $($this).attr('id',  $($this).attr('id').replace($($this).attr('id').match('[0-9]+')[0], (index)));
-        $($this).attr('name', $($this).attr('name').replace($($this).attr('name').match('[0-9]+')[0], (index)));
+        $.each($this, function(j, val_j){
+            $(this).attr('id',  $(this).attr('id').replace($(this).attr('id').match('[0-9]+')[0], (index)));
+            $(this).attr('name', $(this).attr('name').replace($(this).attr('name').match('[0-9]+')[0], (index)));
+        });
         index += 1;
-    })
+    });
+//    $('#id_tourleadslanguages_set-TOTAL_FORMS').val(index+1);
 }
 
 $(function(){
@@ -39,21 +39,14 @@ $(function(){
                 $(this).parent().find('span a').removeClass('for_delete');
             }
         });
-
-        replace();
     });
 
     $('.languages_forms').on('click', 'a.for_delete', function(event){
         event.preventDefault();
-
         var block_for_delete = $(this).parents('.my_form');
+        block_for_delete.hide();
+        $(this).parents('.my_form').find('input[type=checkbox]').attr('checked', true);
 
-        var cur_count_form = parseInt($('#id_tourleadslanguages_set-TOTAL_FORMS').val());
-        $('#id_tourleadslanguages_set-TOTAL_FORMS').val(cur_count_form-1);
-
-        block_for_delete.remove();
-        get_id_for_delete();
-        replace();
     });
 });
 
