@@ -56,11 +56,25 @@ class TourLeadsLanguagesForm(FormControlMixin, forms.ModelForm):
         model = models.TourLeadsLanguages
         exclude = ['id', ]
 
+    def __init__(self, *args, **kwargs):
+        super(TourLeadsLanguagesForm, self).__init__(*args, **kwargs)
+        for field in self.fields.itervalues():
+            field.widget.attrs['class'] += ' select_language'
+
+
+class LanguagesInlineFormset(BaseInlineFormSet):
+    def clean(self):
+        super(LanguagesInlineFormset, self).clean()
+        language = self.forms[0].cleaned_data.get('language')
+        if not language:
+            message = 'Must have at least one language'
+            raise forms.ValidationError(message)
+
 LanguagesFormSet = inlineformset_factory(
     models.TourLeads,
     models.TourLeadsLanguages,
     extra=1,
-    can_delete=False,
+    can_delete=True,
     form=TourLeadsLanguagesForm,
-    formset=BaseInlineFormSet
+    formset=LanguagesInlineFormset,
 )

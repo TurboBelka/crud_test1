@@ -12,39 +12,51 @@
                         {% csrf_token %}
                         {% for field in form %}
                             {% with errors=field.errors %}
-                                <div class="form-group ">
+
                                     {% if field.label == 'Card number' %}
+                                    <div class="form-group languages_forms">
                                         {{ languages_formset.management_form }}
                                         {% for language in languages_formset %}
+                                        <div class="my_form">
                                             {% for field in language %}
                                                 {% with errors=field.errors %}
                                                     <div class="
                                                         {% if field.label != 'Language' %}
                                                             hidden {% endif %}">
                                                         <div class="col-sm-2">
-                                                            {{ field.label_tag }}
+                                                            {% if forloop.parentloop.first %}
+                                                                {{ field.label_tag }}
+                                                            {% endif %}
                                                         </div>
-                                                        <div class="col-sm-10">
-                                                            <div class="input-group {% if errors %} has-error {% endif %}">
+
+                                                        <div class="col-sm-10 language">
+                                                            <div class="input-group {% if errors %} has-error {% endif %}
+                                                                {% if languages_formset.non_form_errors %} has-error {% endif %}">
                                                                 {{ field }}
                                                                 {% if errors %}
                                                                 {% for error in errors %}
                                                                         <span class="help-block">{{ error }}</span>
                                                                     {% endfor %}
                                                                 {% endif %}
-                                                            <!--</div>-->
-                                                            <!--<div class="col-sm-2">-->
                                                                 <span class="input-group-addon" style="padding: 0px;">
-                                                                    <button type="submit" class="btn btn-default ">
-                                                                        <i class="fa fa-save fa-fw "></i>Add</button>
+                                                                    <a class="btn btn-default add_language">
+                                                                        <i class="fa fa-save fa-fw "></i>Add</a>
                                                                 </span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 {% endwith %}
                                            {% endfor %}
+                                            <div class="col-sm-offset-2 col-sm-10 has-error">
+                                                {% for error in languages_formset.non_form_errors %}
+                                                    <span class="help-block">{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
                                         {% endfor %}
+                                    </div>
                                     {% endif %}
+                         <div class="form-group ">
                                         <div class="col-sm-2 ">
                                             {{ field.label_tag }}
                                         </div>
