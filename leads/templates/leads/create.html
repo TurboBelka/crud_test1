@@ -1,9 +1,17 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}
     {{ title }} Tour
 {% endblock %}
 {% block menu %}
     <li class="active">{{ title }} Tour</li>
+{% endblock %}
+{% block links %}
+    {% if title == 'Update' %}
+            <script src="{% static 'js/delete_language.js' %}"></script>
+    {% else %}
+            <script src="{% static 'js/add_language.js' %}"></script>
+    {% endif %}
 {% endblock %}
 {% block content %}
             <div class="row">
@@ -24,9 +32,9 @@
                                                         {% if field.label != 'Language' %}
                                                             hidden {% endif %}">
                                                         <div class="col-sm-2">
-                                                            {% if forloop.parentloop.first %}
+                                                           {# {% if forloop.parentloop.first %} #}
                                                                 {{ field.label_tag }}
-                                                            {% endif %}
+                                                            {# {% endif %} #}
                                                         </div>
 
                                                         <div class="col-sm-10 language">
@@ -39,8 +47,14 @@
                                                                     {% endfor %}
                                                                 {% endif %}
                                                                 <span class="input-group-addon" style="padding: 0px;">
-                                                                    <a class="btn btn-default add_language">
-                                                                        <i class="fa fa-save fa-fw "></i>Add</a>
+                                                                    <a class="btn btn-default {% if title == 'Update' and not forloop.parentloop.last %}
+                                                                        for_delete {% else %} add_language {% endif %}">
+                                                                        {% if title == 'Update' and not forloop.parentloop.last %}
+                                                                            <i class="fa fa-remove fa-fw"></i>Remove
+                                                                        {% else %}
+                                                                            <i class="fa fa-save fa-fw "></i>Add
+                                                                        {% endif %}
+                                                                    </a>
                                                                 </span>
                                                             </div>
                                                         </div>

@@ -1,7 +1,20 @@
+var get_id_for_delete = function(){}
+
+
+var replace = function(){
+    var index = 0;
+    $.each($('.my_form .language'), function(i, value){
+        var $this = $(this).find('input, select');
+        $($this).attr('id',  $($this).attr('id').replace($($this).attr('id').match('[0-9]+')[0], (index)));
+        $($this).attr('name', $($this).attr('name').replace($($this).attr('name').match('[0-9]+')[0], (index)));
+        index += 1;
+    })
+}
+
 $(function(){
     $('.languages_forms').on('click', 'a.add_language', function(event){
         event.preventDefault();
-        var language_block = $('.my_form').first().clone();
+        var language_block = $('.my_form').last().clone();
 
         var cur_count_form = parseInt($('#id_tourleadslanguages_set-TOTAL_FORMS').val());
         $('#id_tourleadslanguages_set-TOTAL_FORMS').val(cur_count_form+1);
@@ -13,7 +26,7 @@ $(function(){
             $(this).attr('name', $(this).attr('name').replace($(this).attr('name').match('[0-9]+')[0], (id_number+1)));
         });
 
-        $('.languages_forms').prepend(language_block);
+        $('.languages_forms').append(language_block);
 
         $.each($('.select_language'), function(index, value){
             if ($(this).val()){
@@ -26,6 +39,8 @@ $(function(){
                 $(this).parent().find('span a').removeClass('for_delete');
             }
         });
+
+        replace();
     });
 
     $('.languages_forms').on('click', 'a.for_delete', function(event){
@@ -37,5 +52,8 @@ $(function(){
         $('#id_tourleadslanguages_set-TOTAL_FORMS').val(cur_count_form-1);
 
         block_for_delete.remove();
+        get_id_for_delete();
+        replace();
     });
 });
+
